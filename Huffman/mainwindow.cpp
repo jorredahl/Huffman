@@ -128,8 +128,11 @@ void MainWindow::encode() {
             encodingKey.insert(codes[i], QByteArray(1, QChar(i).toLatin1()));
     }
     QByteArray output;
-    for (int i = 0; i < binaryString.length() / 8; ++i) {
-        output.append(char(binaryString.mid(8 * i, 8).toInt(nullptr, 2)));
+    for (int i = 0; i < (binaryString.length() + 7) / 8; ++i) {
+        if (binaryString.mid(8 * i, 8).length() == 8)
+            output.append(char(binaryString.mid(8 * i, 8).toInt(nullptr, 2)));
+        else
+            output.append(char(binaryString.mid(8 * i, 8).leftJustified(8,'0').toInt(nullptr, 2)));
     }
     out << encodingKey;
     out << binaryString.length();
